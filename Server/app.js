@@ -17,6 +17,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+//If a seperate connection file is used....
 // async function startApp() {
 //     try {
 //         const client = await mongoConnect();
@@ -28,16 +30,18 @@ app.use(express.urlencoded({ extended: true }));
 // }
 // startApp();
 
-
+//variables that access .env variables
 const mongoURI = process.env.MONGO_URI;
 const PORT = process.env.PORT;
 
-const client = mongoose.connect(mongoURI)
+const client = mongoose.connect(mongoURI)  //connect to mongodb
     .then((result) => app.listen(PORT, () => {
         console.log('Connected to mongoDB.....Listening....');
     }))
     .catch((err) => console.log(err));
 
+
+//default route
 app.get('/', (req, res) => {
     res.send('hello');
 });
@@ -86,8 +90,8 @@ app.get('/delete', async (req, res, next) => {
 app.get('/api/entryExitPoints', async (req, res) => {
     try {
         const entryExitPoints = {
-            entryPoint: [12.906283, 74.859756],
-            exitPoint: [54, 14]
+            entryPoint: [12, 74],
+            exitPoint: [50, 10]
         };
         res.status(200).json(entryExitPoints);
     } catch (error) {
@@ -99,10 +103,10 @@ app.get('/api/entryExitPoints', async (req, res) => {
 app.post('/addTollGateData', async (req, res) => {
     try {
         const tollData = {
-            "name": "Kadri Park",
+            "name": "Canara Bus Stop",
             "location": {
                 "type": "Point",
-                "coordinates": [12.886254, 74.862331] // Example coordinates (longitude, latitude)
+                "coordinates": [12.898323, 74.986961] // Example coordinates (longitude, latitude)
             }
         }
         const newTollGate = new tollGate(tollData);
@@ -113,6 +117,8 @@ app.post('/addTollGateData', async (req, res) => {
     }
 });
 
+
+//to get the nearest toll gate to current location
 app.get('/nearestTollGate', async (req, res) => {
     try {
         console.log('Hello');
@@ -124,6 +130,6 @@ app.get('/nearestTollGate', async (req, res) => {
     }
 });
 
-
+//User requests are forwarded to this router /user
 app.use('/user', gpsRoutes);
 

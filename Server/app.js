@@ -6,6 +6,7 @@ const gpsData = require('./models/gpsdata');
 const tollGate = require('./models/tollGateData');
 const mongoConnect = require('./functions/mongoConnect');
 const checkTollGate = require('./functions/nearestTollGate');
+const calculateDistance = require('./functions/distance.js');
 require('dotenv').config();
 
 const gpsRoutes = require('./routes/routes');
@@ -60,14 +61,18 @@ app.get('/getdata', (req, res) => {
 // });
 
 app.post('/addgpsdata', async (req, res) => {
-    console.log(req.body);
-    const { latitude, longitude } = req.body;
-    // console.log(latitude, longitude, time);
+    try {
+        console.log(req.body);
+        const { latitude, longitude } = req.body;
+        // console.log(latitude, longitude, time);
 
-    const newGPSData = new gpsData({ latitude, longitude });
-    await newGPSData.save();
+        const newGPSData = new gpsData({ latitude, longitude });
+        await newGPSData.save();
 
-    res.status(201).send({ message: 'GPS data saved successfully' });
+        res.status(201).send({ message: 'GPS data saved successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 
@@ -121,7 +126,6 @@ app.post('/addTollGateData', async (req, res) => {
 //to get the nearest toll gate to current location
 app.get('/nearestTollGate', async (req, res) => {
     try {
-        console.log('Hello');
         const { signal, tollGate } = await checkTollGate([12.905507, 74.856255]);
         res.send({ signal, tollGate });
     } catch (error) {
@@ -129,6 +133,20 @@ app.get('/nearestTollGate', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+//get distance between two points
+app.get('/distance', async (req, res) => {
+    // const coordinates = { origin: [12.901584052072922, 74.84245090085649], destination: [12.888953430425197, 74.85650976154386] };
+    const coordinates = req.body;
+
+    try {
+        const distance = await calculateDistance(coordinates);
+        res.json({ distance });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 
 //User requests are forwarded to this router /user
 app.use('/user', gpsRoutes);

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const gpsData = require('../models/gpsdata');
 const vehicleDetails = require('../models/vehicleDetails');
+const userData = require('../models/userData');
 const router = express.Router();
 router.use(cors());
 
@@ -14,17 +15,17 @@ router.get('/getcoords', (req, res, next) => {
 });
 
 router.post('/adduser', (req, res, next) => {
-    const user = new vehicleDetails({ "vehicleNumber": "KA-19-MH-5071", "userName": "Tejas" });
+    const user = new userData({ "vname": "admin", "vpassword": "123" });
     user.save().then((result) => {
         res.status(201).send({ message: "success" });
     });
 });
 
 router.post('/login', async (req, res, next) => {
-    const { vehicleNumber, userName } = req.body;
+    const { vname, vpassword } = req.body;
     console.log(req.body);
     try {
-        const user = await vehicleDetails.findOne({ vehicleNumber, userName });
+        const user = await userData.findOne({ vname, vpassword });
 
         if (user) {
             res.status(200).json({ message: 'Login successful' });

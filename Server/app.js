@@ -54,8 +54,8 @@ app.get('/getdata', (req, res) => {
 });
 
 app.get('/addgpsdata', (req, res) => {
-    // const data = JSON.parse('{"name":"John", "age":30, "city":"New York"}');
-    console.log(JSON.parse(req.body));
+    const data = JSON.parse('{"name":"John", "age":30, "city":"New York"}');
+    // console.log(JSON.parse(req.body));
     console.log(res.send(data));
     // console.log(req.body);
 });

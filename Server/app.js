@@ -53,12 +53,12 @@ app.get('/getdata', (req, res) => {
     }).catch((err) => { console.log(err); });
 });
 
-// app.get('/addgpsdata', (req, res) => {
-//     // const data = JSON.parse('{"name":"John", "age":30, "city":"New York"}');
-//     console.log(JSON.parse(req.body));
-//     console.log(res.send(data));
-//     // console.log(req.body);
-// });
+app.get('/addgpsdata', (req, res) => {
+    // const data = JSON.parse('{"name":"John", "age":30, "city":"New York"}');
+    console.log(JSON.parse(req.body));
+    console.log(res.send(data));
+    // console.log(req.body);
+});
 
 app.post('/addgpsdata', async (req, res) => {
     try {

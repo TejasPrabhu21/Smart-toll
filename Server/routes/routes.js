@@ -15,7 +15,7 @@ router.get('/getcoords', (req, res, next) => {
 });
 
 router.post('/adduser', (req, res, next) => {
-    const user = new userData({ "vname": "User", "vpassword": "121212" });
+    const user = new userData({ "username": "user", "vehicleNumber": "KA-19-MH-2002" });
     user.save().then((result) => {
         res.status(201).send({ message: "success" });
     });

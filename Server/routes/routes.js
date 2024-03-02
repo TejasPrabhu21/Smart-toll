@@ -22,7 +22,7 @@ router.post('/adduser', (req, res, next) => {
 });
 
 router.post('/login', async (req, res, next) => {
-    const { vname, vpassword } = req.body;
+    const { username, vehicleNumber } = req.body;
     console.log(req.body);
     try {
         const user = await userData.findOne({ username, vehicleNumber });

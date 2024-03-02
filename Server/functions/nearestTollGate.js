@@ -41,7 +41,7 @@ async function checkTollGate(vehicleCoordinates) {
 
 
         // Vehicle is close to any toll gate
-        return { signal: 'toll gate crossed', tollGate: nearestTollGate };
+        return { signal: 'Nearest toll gate', tollGate: nearestTollGate };
     } catch (error) {
         console.error('Error occurred:', error);
         return { signal: 'Error occurred', error: error.message };

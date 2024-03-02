@@ -80,7 +80,7 @@ app.post('/addgpsdata', async (req, res) => {
 app.get('/delete', async (req, res, next) => {
     try {
         const deletionCriteria = {
-            latitude: { $lte: 100 }
+            time: { $lt: "1708361741218" }
         };
 
         const result = await gpsData.deleteMany(deletionCriteria);
@@ -126,7 +126,8 @@ app.post('/addTollGateData', async (req, res) => {
 //to get the nearest toll gate to current location
 app.get('/nearestTollGate', async (req, res) => {
     try {
-        const { signal, tollGate } = await checkTollGate([12.905507, 74.856255]);
+        const { latitude, longitude } = req.body;
+        const { signal, tollGate } = await checkTollGate([latitude, longitude]);
         res.send({ signal, tollGate });
     } catch (error) {
         console.error('Error occurred:', error);

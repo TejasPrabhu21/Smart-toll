@@ -15,7 +15,7 @@ router.get('/getcoords', (req, res, next) => {
 });
 
 router.post('/adduser', (req, res, next) => {
-    const user = new userData({ "vname": "admin", "vpassword": "123" });
+    const user = new userData({ "vname": "User", "vpassword": "121212" });
     user.save().then((result) => {
         res.status(201).send({ message: "success" });
     });
@@ -25,7 +25,7 @@ router.post('/login', async (req, res, next) => {
     const { vname, vpassword } = req.body;
     console.log(req.body);
     try {
-        const user = await userData.findOne({ vname, vpassword });
+        const user = await userData.findOne({ username, vehicleNumber });
 
         if (user) {
             res.status(200).json({ message: 'Login successful' });

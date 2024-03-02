@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const userDataSchema = new mongoose.Schema({
-    vname: {
+    username: {
         type: String,
         required: true
     },
-    vpassword: {
+    vehicleNumber: {
         type: String,
         required: true
     }

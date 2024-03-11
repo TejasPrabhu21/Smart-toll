@@ -1,18 +1,24 @@
 const express = require('express');
 const cors = require('cors');
+const randomize = require('randomatic'); // for generating random OTPs
+const twilio = require('twilio'); // if using Twilio for SMS
+const fast2sms = require('fast-two-sms');
+const axios = require('axios');
+const OTP = require('../models/otp');
+
+// const nodemailer = require('nodemailer'); // if using nodemailer for email
+// const { validatePhoneNumber, validateEmail } = require('./validation');
+
+//Database models
 const gpsData = require('../models/gpsdata');
 const vehicleDetails = require('../models/vehicleDetails');
 const userData = require('../models/userData');
+
+
 const router = express.Router();
 router.use(cors());
+require('dotenv').config();
 
-router.get('/getcoords', (req, res, next) => {
-    // gpsData.find().then((result) => {
-    //     res.send(gpsData);
-    // })
-    const data = { cost: '100', entry_time: '10:50', exit_time: '11:00' };
-    res.send(data);
-});
 
 router.post('/adduser', (req, res, next) => {
     const user = new userData({ "username": "user", "vehicleNumber": "KA-19-MH-2002" });
@@ -39,4 +45,159 @@ router.post('/login', async (req, res, next) => {
 });
 
 
+//Get vehicle owners details API
+router.get('/vehicle/:registrationNumber', async (req, res) => {
+    try {
+        const registrationNumber = req.params.registrationNumber;
+        console.log(registrationNumber);
+        const vehicle = await vehicleDetails.findOne({ RegistrationNumber: registrationNumber });
+        console.log(vehicle);
+        if (!vehicle) {
+            return res.status(404).json({ message: "Vehicle not found" });
+        }
+
+        // Send the response from VAHAN API to the client
+        res.json(vehicle);
+    } catch (error) {
+        console.error('Error fetching vehicle details:', error);
+        res.status(500).json({ error: 'Failed to fetch vehicle details' });
+    }
+});
+
+//send and OTP
+router.post('/send-otp', async (req, res) => {
+    const { phoneNumber } = req.body;
+
+    if (!phoneNumber) {
+        return res.status(400).json({ error: 'Phone number is required' });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    //otp is saved to db
+    try {
+        await OTP.create({ phoneNumber, otp });
+    } catch (error) {
+        console.error('Error saving OTP to database:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+    // Send OTP via fast-two-sms
+    // try {
+
+    //     const response = await axios.post(
+    //         process.env.FAST_TWO_SMS_URI,
+    //         {
+    //             route: 'q',
+    //             message: `Your OTP is ${otp}.`,
+    //             language: 'english',
+    //             flash: 0,
+    //             numbers: phoneNumber,
+    //         },
+    //         {
+    //             headers: {
+    //                 "authorization": process.env.FAST_TWO_SMS_API_KEY,
+    //                 "Content-Type": "application/json",
+    //                 'Cache-Control': 'no-cache',
+    //             },
+    //         }
+    //     );
+    //     if (response.data.return === true) {
+    //         res.send('OTP sent successfully');
+    //     } else {
+    //         res.send('Failed to send OTP');
+    //     }
+    // } catch (error) {
+    //     console.log(error);
+    //     res.send('Error sending OTP');
+    // }
+    res.send('OTP sent successfully');
+});
+
+// Route to handle OTP verification
+router.post('/verify-otp', async (req, res) => {
+    const { phoneNumber, otp } = req.body;
+
+    if (!phoneNumber || !otp) {
+        return res.status(400).json({ error: 'Phone number and OTP are required' });
+    }
+
+    try {
+        const otpEntry = await OTP.findOne({ phoneNumber, otp });
+
+        if (!otpEntry) {
+            return res.status(400).json({ error: 'Invalid OTP' });
+        }
+
+        // Check if OTP has expired
+        if (otpEntry.expiresAt < new Date()) {
+            return res.status(400).json({ error: 'OTP has expired' });
+        }
+
+        // If OTP is valid, delete it from the database
+        await OTP.deleteOne({ _id: otpEntry._id });
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error verifying OTP:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+// router.post('/send-otp', (req, res) => {
+//     const phoneNumber = '+91' + req.query.phoneNumber; // Assuming phone number is provided as a query parameter
+//     if (!phoneNumber) {
+//         return res.status(400).send('Phone number is required');
+//     }
+
+//     // Twilio variables
+//     const accountSid = 'ACfa0b4fb8544abb729fa7320f320d4c19';
+//     const authToken = 'c7f538d9036c5e77aa57c44ad58d63fc';
+//     const client = new twilio(accountSid, authToken);
+
+//     const otp = Math.floor(100000 + Math.random() * 900000);
+
+
+//     client.verify.services('VAbbe0ba231d37cd19055cc72406f066cd')
+//         .verifications
+//         .create({ to: phoneNumber, channel: 'sms' })
+//         .then(verification => console.log(`OTP sent to ${phoneNumber}: ${verification.sid}`))
+//         .catch(error => console.error(`Failed to send OTP: ${error}`));
+
+//     res.send('OTP sent successfully');
+// });
+
+// router.get('/verifyOTP', (req, res) => {
+//     const phoneNumber = '+91' + req.query.phoneNumber;
+//     const userEnteredCode = req.query.code;
+
+//     if (!phoneNumber || !userEnteredCode) {
+//         return res.status(400).send('Phone number and code are required');
+//     }
+//     const accountSid = 'ACfa0b4fb8544abb729fa7320f320d4c19';
+//     const authToken = 'c7f538d9036c5e77aa57c44ad58d63fc';
+//     const client = new twilio(accountSid, authToken);
+//     client.verify.services('VAbbe0ba231d37cd19055cc72406f066cd')
+//         .verificationChecks
+//         .create({ to: phoneNumber, code: userEnteredCode })
+//         .then(verificationCheck => {
+//             if (verificationCheck.status === 'approved') {
+//                 res.send('OTP verified successfully');
+//             } else {
+//                 res.status(400).send('OTP verification failed');
+//             }
+//         })
+//         .catch(error => res.status(500).send(`Failed to verify OTP: ${error}`));
+// });

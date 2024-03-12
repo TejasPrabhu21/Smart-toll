@@ -1,73 +1,42 @@
 [
-    {
-      "RegistrationNumber": "MH01AB1234",
-      "RegistrationDate": "2023-05-10",
-      "ChasisNumber": "ABC123456789",
-      "EngineNumber": "XYZ987654321",
-      "OwnerName": "John Doe"
-    },
-    {
-      "RegistrationNumber": "DL02CD5678",
-      "RegistrationDate": "2022-11-15",
-      "ChasisNumber": "DEF456789012",
-      "EngineNumber": "LMN654321098",
-      "OwnerName": "Jane Smith"
-    },
-    {
-      "RegistrationNumber": "KA03EF9012",
-      "RegistrationDate": "2024-02-28",
-      "ChasisNumber": "GHI789012345",
-      "EngineNumber": "OPQ543210987",
-      "OwnerName": "Michael Johnson"
-    },
-    {
-      "RegistrationNumber": "UP04GH3456",
-      "RegistrationDate": "2021-09-20",
-      "ChasisNumber": "JKL901234567",
-      "EngineNumber": "RST432109876",
-      "OwnerName": "Emily Brown"
-    },
-    {
-      "RegistrationNumber": "TN05IJ6789",
-      "RegistrationDate": "2023-07-03",
-      "ChasisNumber": "UVW123456789",
-      "EngineNumber": "XYZ987654321",
-      "OwnerName": "David Wilson"
-    },
-    {
-      "RegistrationNumber": "MP06KL1234",
-      "RegistrationDate": "2022-04-18",
-      "ChasisNumber": "ABC987654321",
-      "EngineNumber": "DEF123456789",
-      "OwnerName": "Sarah Miller"
-    },
-    {
-      "RegistrationNumber": "GJ07MN5678",
-      "RegistrationDate": "2024-01-05",
-      "ChasisNumber": "GHI543210987",
-      "EngineNumber": "JKL678901234",
-      "OwnerName": "Christopher Lee"
-    },
-    {
-      "RegistrationNumber": "AP08OP9012",
-      "RegistrationDate": "2021-12-30",
-      "ChasisNumber": "MNO456789012",
-      "EngineNumber": "PQR789012345",
-      "OwnerName": "Amanda Davis"
-    },
-    {
-      "RegistrationNumber": "RJ09QR3456",
-      "RegistrationDate": "2023-09-15",
-      "ChasisNumber": "STU901234567",
-      "EngineNumber": "VWX012345678",
-      "OwnerName": "Ryan Taylor"
-    },
-    {
-      "RegistrationNumber": "PB10ST6789",
-      "RegistrationDate": "2022-06-25",
-      "ChasisNumber": "YZA234567890",
-      "EngineNumber": "BCD456789012",
-      "OwnerName": "Jessica Martinez"
-    }
-  ]
-  
+  {
+    "RegistrationNumber": "KA01AB1234",
+    "RegistrationDate": "2023-05-10",
+    "ChasisNumber": "ABC123456789",
+    "EngineNumber": "XYZ987654321",
+    "OwnerName": "Tejas",
+    "PhoneNumber": "+91 8277770747"
+  },
+  {
+    "RegistrationNumber": "DKA02CD5678",
+    "RegistrationDate": "2022-11-15",
+    "ChasisNumber": "DEF456789012",
+    "EngineNumber": "LMN654321098",
+    "OwnerName": "Darshan",
+    "PhoneNumber": "+91 7975403728"
+  },
+  {
+    "RegistrationNumber": "KA03EF9012",
+    "RegistrationDate": "2024-02-28",
+    "ChasisNumber": "GHI789012345",
+    "EngineNumber": "OPQ543210987",
+    "OwnerName": "Karthik",
+    "PhoneNumber": "+91 6363347203"
+  },
+  {
+    "RegistrationNumber": "KA04GH3456",
+    "RegistrationDate": "2021-09-20",
+    "ChasisNumber": "JKL901234567",
+    "EngineNumber": "RST432109876",
+    "OwnerName": "Anirudh",
+    "PhoneNumber": "+91 8762723647"
+  },
+  {
+    "RegistrationNumber": "KA05IJ6789",
+    "RegistrationDate": "2023-07-03",
+    "ChasisNumber": "UVW123456789",
+    "EngineNumber": "XYZ987654321",
+    "OwnerName": "Chethan",
+    "PhoneNumber": "+91 8971174730"
+  }
+]

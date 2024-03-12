@@ -46,9 +46,9 @@ router.post('/login', async (req, res, next) => {
 
 
 //Get vehicle owners details API
-router.get('/vehicle/:registrationNumber', async (req, res) => {
+router.get('/vehicle', async (req, res) => {
     try {
-        const registrationNumber = req.params.registrationNumber;
+        const { registrationNumber } = req.body;
         console.log(registrationNumber);
         const vehicle = await vehicleDetails.findOne({ RegistrationNumber: registrationNumber });
         console.log(vehicle);
@@ -88,7 +88,7 @@ router.post('/send-otp', async (req, res) => {
     //         process.env.FAST_TWO_SMS_URI,
     //         {
     //             route: 'q',
-    //             message: `Your OTP is ${otp}.`,
+    //             message: `Your SMART TOLL app OTP is ${otp}. Valid till 5 minutes.`,
     //             language: 'english',
     //             flash: 0,
     //             numbers: phoneNumber,

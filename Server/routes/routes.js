@@ -49,15 +49,13 @@ router.post('/login', async (req, res, next) => {
 router.get('/vehicle', async (req, res) => {
     try {
         const { registrationNumber } = req.body;
-        console.log(registrationNumber);
         const vehicle = await vehicleDetails.findOne({ RegistrationNumber: registrationNumber });
-        console.log(vehicle);
         if (!vehicle) {
             return res.status(404).json({ message: "Vehicle not found" });
         }
 
         // Send the response from VAHAN API to the client
-        res.json(vehicle);
+        res.status(200).json(vehicle);
     } catch (error) {
         console.error('Error fetching vehicle details:', error);
         res.status(500).json({ error: 'Failed to fetch vehicle details' });

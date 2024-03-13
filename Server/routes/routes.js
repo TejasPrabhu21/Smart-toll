@@ -46,7 +46,7 @@ router.post('/login', async (req, res, next) => {
 
 
 //Get vehicle owners details API
-router.get('/vehicle', async (req, res) => {
+router.post('/vehicle', async (req, res) => {
     try {
         const { registrationNumber } = req.body;
         const vehicle = await vehicleDetails.findOne({ RegistrationNumber: registrationNumber });

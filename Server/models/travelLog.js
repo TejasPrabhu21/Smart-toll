@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const gpsdataSchema = new mongoose.Schema({
+const travelLogSchema = new mongoose.Schema({
     latitude: {
         type: String,
         required: true
@@ -8,6 +8,10 @@ const gpsdataSchema = new mongoose.Schema({
     longitude: {
         type: String,
         required: true
+    },
+    status: {
+        type: String,
+        required: true,
     },
     time: {
         type: String,
@@ -21,6 +25,6 @@ const gpsdataSchema = new mongoose.Schema({
     // }
 });
 
-const gpsdata = mongoose.model("gpsdata", gpsdataSchema);
+const travelLog = mongoose.model("travelLog", travelLogSchema);
 
-module.exports = gpsdata;
+module.exports = travelLog;

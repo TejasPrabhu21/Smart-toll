@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
-const gpsData = require('./models/gpsdata');
+const gpsData = require('./models/travelLog.js');
 const tollGate = require('./models/tollGateData');
 const mongoConnect = require('./functions/mongoConnect');
 const checkTollGate = require('./functions/nearestTollGate');
@@ -10,6 +10,7 @@ const calculateDistance = require('./functions/distance.js');
 require('dotenv').config();
 
 const gpsRoutes = require('./routes/routes');
+const travelLog = require('./models/travelLog.js');
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -148,7 +149,19 @@ app.get('/distance', async (req, res) => {
     }
 });
 
+app.post('/entryexitstatus', (req, res) => {
+    try {
+        const { latitude, longitude, status } = req.body;
 
+        if (status === "success") {
+            const newTravelLog = new travelLog({ latitude, longitude, status });
+            newTravelLog.save();
+            res.status(201).send({ message: 'Travel log saved successfully' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+})
 //User requests are forwarded to this router /user
 app.use('/user', gpsRoutes);
 

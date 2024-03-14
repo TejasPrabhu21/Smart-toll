@@ -10,7 +10,7 @@ const OTP = require('../models/otp');
 // const { validatePhoneNumber, validateEmail } = require('./validation');
 
 //Database models
-const gpsData = require('../models/gpsdata');
+const gpsData = require('../models/travelLog');
 const vehicleDetails = require('../models/vehicleDetails');
 const userData = require('../models/userData');
 

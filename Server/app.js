@@ -126,7 +126,7 @@ app.post('/addTollGateData', async (req, res) => {
 //to get the nearest toll gate to current location
 app.get('/nearestTollGate', async (req, res) => {
     try {
-        const { latitude, longitude } = req.body;
+        const { latitude, longitude } = req.query;
         const { signal, tollGate } = await checkTollGate([latitude, longitude]);
         res.send({ signal, tollGate });
     } catch (error) {

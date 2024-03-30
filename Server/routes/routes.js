@@ -5,6 +5,7 @@ const twilio = require('twilio'); // if using Twilio for SMS
 const fast2sms = require('fast-two-sms');
 const axios = require('axios');
 const OTP = require('../models/otp');
+const paymentRoutes = require('./paymentRoutes');
 
 // const nodemailer = require('nodemailer'); // if using nodemailer for email
 // const { validatePhoneNumber, validateEmail } = require('./validation');
@@ -120,6 +121,7 @@ router.post('/verify-otp', async (req, res) => {
     }
 
     try {
+        // Look for the OTP entry
         const otpEntry = await OTP.findOne({ phoneNumber, otp });
 
         if (!otpEntry) {
@@ -132,7 +134,25 @@ router.post('/verify-otp', async (req, res) => {
         }
 
         // If OTP is valid, delete it from the database
-        await OTP.deleteOne({ _id: otpEntry._id });
+        // await OTP.deleteOne({ _id: otpEntry._id });
+
+        // Format phone number properly
+        const formattedPhoneNumber = "+91" + phoneNumber;
+
+        // Call external service to fetch vehicle registration details
+        const vehicleData = { "PhoneNumber": formattedPhoneNumber };
+        const { data } = await axios.post('https://smart-toll.onrender.com/user/vehicle', vehicleData);
+
+        const { RegistrationNumber, OwnerName, PhoneNumber } = data;
+
+        // Check if user data already exists
+        let existingUser = await userData.findOne({ vehicleNumber: RegistrationNumber });
+
+        if (!existingUser) {
+            // If user data doesn't exist, create a new entry
+            const newUser = new userData({ username: OwnerName, vehicleNumber: RegistrationNumber, phoneNumber: PhoneNumber });
+            await newUser.save();
+        }
 
         res.json({ success: true });
     } catch (error) {
@@ -140,6 +160,9 @@ router.post('/verify-otp', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+
+router.use('/payment', paymentRoutes);
 
 module.exports = router;
 

@@ -20,6 +20,10 @@ const vehicleDetailsSchema = new mongoose.Schema({
     OwnerName: {
         type: String,
         required: true
+    },
+    PhoneNumber: {
+        type: String,
+        required: true
     }
 });
 const vehicleDetails = mongoose.model("vehicleDetails", vehicleDetailsSchema);

@@ -18,11 +18,6 @@ const travelLogSchema = new mongoose.Schema({
         default: Date.now(),
         required: true
     }
-    // updatedate: {
-    //     type: Date,
-    //     default: Date.now(),
-    //     required: false
-    // }
 });
 
 const travelLog = mongoose.model("travelLog", travelLogSchema);

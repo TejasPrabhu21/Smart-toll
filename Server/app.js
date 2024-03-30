@@ -138,7 +138,8 @@ app.get('/nearestTollGate', async (req, res) => {
 
 //get distance between two points
 app.get('/distance', async (req, res) => {
-    // const coordinates = { origin: [12.901584052072922, 74.84245090085649], destination: [12.888953430425197, 74.85650976154386] };
+
+    // const coordinates = { origin: [40.7128, -74.0060], destination: [34.0522, -118.2437] };
     const coordinates = req.body;
 
     try {

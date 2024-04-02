@@ -134,27 +134,27 @@ router.post('/verify-otp', async (req, res) => {
         }
 
         // If OTP is valid, delete it from the database
-        // await OTP.deleteOne({ _id: otpEntry._id });
+        await OTP.deleteOne({ _id: otpEntry._id });
 
-        // Format phone number properly
-        const formattedPhoneNumber = "+91" + phoneNumber;
+        // // Format phone number properly
+        // const formattedPhoneNumber = "+91" + phoneNumber;
 
-        // Call external service to fetch vehicle registration details
-        const vehicleData = { "PhoneNumber": formattedPhoneNumber };
-        const { data } = await axios.post('https://smart-toll.onrender.com/user/vehicle', vehicleData);
+        // // Call external service to fetch vehicle registration details
+        // const vehicleData = { "PhoneNumber": formattedPhoneNumber };
+        // const { data } = await axios.post('https://smart-toll.onrender.com/user/vehicle', vehicleData);
 
-        const { RegistrationNumber, OwnerName, PhoneNumber } = data;
+        // const { RegistrationNumber, OwnerName, PhoneNumber } = data;
 
-        // Check if user data already exists
-        let existingUser = await userData.findOne({ vehicleNumber: RegistrationNumber });
+        // // Check if user data already exists
+        // let existingUser = await userData.findOne({ vehicleNumber: RegistrationNumber });
 
-        if (!existingUser) {
-            // If user data doesn't exist, create a new entry
-            const newUser = new userData({ username: OwnerName, vehicleNumber: RegistrationNumber, phoneNumber: PhoneNumber });
-            await newUser.save();
-        }
+        // if (!existingUser) {
+        //     // If user data doesn't exist, create a new entry
+        //     const newUser = new userData({ username: OwnerName, vehicleNumber: RegistrationNumber, phoneNumber: PhoneNumber });
+        //     await newUser.save();
+        // }
 
-        res.json({ success: true });
+        res.status(201).json({ success: true });
     } catch (error) {
         console.error('Error verifying OTP:', error);
         res.status(500).json({ error: 'Internal server error' });

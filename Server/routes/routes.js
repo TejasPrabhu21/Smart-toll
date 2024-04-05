@@ -81,34 +81,34 @@ router.post('/send-otp', async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
     // Send OTP via fast-two-sms
-    // try {
+    try {
 
-    //     const response = await axios.post(
-    //         process.env.FAST_TWO_SMS_URI,
-    //         {
-    //             route: 'q',
-    //             message: `Your SMART TOLL app OTP is ${otp}. Valid till 5 minutes.`,
-    //             language: 'english',
-    //             flash: 0,
-    //             numbers: phoneNumber,
-    //         },
-    //         {
-    //             headers: {
-    //                 "authorization": process.env.FAST_TWO_SMS_API_KEY,
-    //                 "Content-Type": "application/json",
-    //                 'Cache-Control': 'no-cache',
-    //             },
-    //         }
-    //     );
-    //     if (response.data.return === true) {
-    //         res.send('OTP sent successfully');
-    //     } else {
-    //         res.send('Failed to send OTP');
-    //     }
-    // } catch (error) {
-    //     console.log(error);
-    //     res.send('Error sending OTP');
-    // }
+        const response = await axios.post(
+            process.env.FAST_TWO_SMS_URI,
+            {
+                route: 'q',
+                message: `Your SMART TOLL app OTP is ${otp}. Valid till 5 minutes.`,
+                language: 'english',
+                flash: 0,
+                numbers: phoneNumber,
+            },
+            {
+                headers: {
+                    "authorization": process.env.FAST_TWO_SMS_API_KEY,
+                    "Content-Type": "application/json",
+                    'Cache-Control': 'no-cache',
+                },
+            }
+        );
+        if (response.data.return === true) {
+            res.send('OTP sent successfully');
+        } else {
+            res.send('Failed to send OTP');
+        }
+    } catch (error) {
+        console.log(error);
+        res.send('Error sending OTP');
+    }
     res.send('OTP sent successfully');
 });
 

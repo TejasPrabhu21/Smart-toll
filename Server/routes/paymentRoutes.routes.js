@@ -11,7 +11,7 @@ require('dotenv').config();
 payRouter.post('/createCustomer', async (req, res) => {
     try {
         const customer = await stripe.customers.create({
-            email: "newCustomer@smart-toll.com",
+            name: req.name,
             // Add more customer detailss
         });
         res.status(200).json(customer);

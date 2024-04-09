@@ -1,5 +1,6 @@
 const axios = require('axios');
 
+// coordinates = { origin: [40.7128, -74.0060], destination: [34.0522, -118.2437] }
 async function calculateDistance(coordinates){
     try{ 
         const origin = coordinates.origin.reverse().join(',');
@@ -8,7 +9,7 @@ async function calculateDistance(coordinates){
         // Calculate distance
         const distanceResponse = await axios.get(`https://router.project-osrm.org/route/v1/driving/${origin};${destination}?overview=false`);
         const distance = distanceResponse.data.routes[0].distance; // Distance is in meters
-        console.log("Distance:", distance / 1000, "km"); // Convert distance to kilometers
+        // console.log("Distance:", distance / 1000, "km"); // Convert distance to kilometers
         return (distance / 1000).toPrecision(4);
     } catch(error){
         console.log(error);

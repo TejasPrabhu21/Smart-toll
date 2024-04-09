@@ -5,13 +5,12 @@ const twilio = require('twilio'); // if using Twilio for SMS
 const fast2sms = require('fast-two-sms');
 const axios = require('axios');
 const OTP = require('../models/otp');
-const paymentRoutes = require('./paymentRoutes');
+const paymentRoutes = require('./paymentRoutes.routes');
 
 // const nodemailer = require('nodemailer'); // if using nodemailer for email
 // const { validatePhoneNumber, validateEmail } = require('./validation');
 
 //Database models
-const gpsData = require('../models/travelLog');
 const vehicleDetails = require('../models/vehicleDetails');
 const userData = require('../models/userData');
 
@@ -106,7 +105,7 @@ router.post('/send-otp', async (req, res) => {
     //         res.send('Failed to send OTP');
     //     }
     // } catch (error) {
-    //     console.log(error);
+    //     console.log(error); 
     //     res.send('Error sending OTP');
     // }
     res.send('OTP sent successfully');
@@ -161,6 +160,15 @@ router.post('/verify-otp', async (req, res) => {
     }
 });
 
+router.post('/getBalance', (req, res) => {
+    const { customerId, amount } = req.body;
+
+
+})
+
+router.post('/getTransactionLogs', (req, res) => {
+    const { vehicleNumber } = req.body;
+});
 
 router.use('/payment', paymentRoutes);
 

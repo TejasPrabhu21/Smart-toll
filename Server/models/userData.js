@@ -19,6 +19,11 @@ const userDataSchema = new mongoose.Schema({
         default: "",
         required: false
     },
+    customerId: {
+        type: String,
+        default: "",
+        required: false
+    },
     balance: {
         type: Number,
         default: 0,
@@ -28,7 +33,14 @@ const userDataSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
         required: true
-    }
+    },
+    transactionLogs: [
+        {
+            type: mongoose.Schema.Types.ObjectId, // Reference to the transactionLogs document
+            ref: 'transactionLogs', // Reference to the transactionLogs model
+            required: false
+        }
+    ]
 });
 
 const userData = mongoose.model("userData", userDataSchema);

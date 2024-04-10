@@ -13,6 +13,7 @@ const paymentRoutes = require('./paymentRoutes.routes');
 //Database models
 const vehicleDetails = require('../models/vehicleDetails');
 const userData = require('../models/userData');
+const transactionLogs = require('../models/transactionLogs');
 
 
 const router = express.Router();
@@ -160,14 +161,35 @@ router.post('/verify-otp', async (req, res) => {
     }
 });
 
-router.post('/getBalance', (req, res) => {
-    const { customerId, amount } = req.body;
+router.post('/getBalance', async (req, res) => {
+    const { vehicleNumber, customerId, amount } = req.body;
+    try {
+        const updatedUser = await userData.findOneAndUpdate(
+            { vehicleNumber },
+            { customerId: customerId, $inc: { balance: amount }, verified: true },
+            { new: true }
+        );
 
-
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ balance: updatedUser.balance });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 })
 
-router.post('/getTransactionLogs', (req, res) => {
+router.post('/getTransactionLogs', async (req, res) => {
     const { vehicleNumber } = req.body;
+    try {
+        const user = await userData.findOne({ vehicleNumber: vehicleNumber }).populate({ path: 'transactionLogs', model: 'transactionLogs' });
+
+        res.status(200).send({ transactions: user.transactionLogs });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 router.use('/payment', paymentRoutes);

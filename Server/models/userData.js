@@ -36,8 +36,8 @@ const userDataSchema = new mongoose.Schema({
     },
     transactionLogs: [
         {
-            type: mongoose.Schema.Types.ObjectId, // Reference to the transactionLogs document
-            ref: 'transactionLogs', // Reference to the transactionLogs model
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'transactionLogs',
             required: false
         }
     ]

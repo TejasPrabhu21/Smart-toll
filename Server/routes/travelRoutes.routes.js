@@ -56,13 +56,14 @@ vehicleRouter.post('/exit', async (req, res) => {
         const entryCoordinates = decoded.coordinates;
         const transactionId = decoded.transactionId;
         const userId = decoded.userId;
-        console.log(userId);
-        const entryExitCoords = { origin: entryCoordinates, destination: coordinates }
+        const user = userData.findById(userId);
 
+        const entryExitCoords = { origin: entryCoordinates, destination: coordinates }
         const distance = await calculateDistance(entryExitCoords);
         const tollAmount = await calculateTollTax('car', distance);
         const exitTime = new Date(Date.now() + IST_TIMEZONE_OFFSET);
-
+        const custId = user.customerId;
+        console.log(custId);
         // Update the transaction log document with exit details
         const updatedTransaction = await transactionLogs.findByIdAndUpdate(
             transactionId,
@@ -74,7 +75,7 @@ vehicleRouter.post('/exit', async (req, res) => {
                     },
                     'exit.time': exitTime,
                     'tollPaid': tollAmount,
-                    'customerId': 'cid_si234209jsdf'
+                    'customerId': custId
                 }
             },
             { new: true } // Return the updated document
@@ -86,10 +87,12 @@ vehicleRouter.post('/exit', async (req, res) => {
 
         const updatedUserData = await userData.findOneAndUpdate(
             { vehicleNumber: vehicleNumber },
-            { $push: { transactionLogs: updatedTransaction._id } }, // Push transaction log ID to the array
+            {
+                $push: { transactionLogs: updatedTransaction._id },
+                $inc: { balance: -tollAmount }
+            }, // Push transaction log ID to the array and deduct toll amount
             { new: true } // Return updated document
         );
-        console.log(updatedUserData);
         res.status(200).json({ updatedTransaction, 'distance': distance, 'tollAmount': tollAmount, message: 'Exit recorded successfully' });
     } catch (error) {
         console.error('Error:', error);

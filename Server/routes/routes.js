@@ -14,6 +14,7 @@ const paymentRoutes = require('./paymentRoutes.routes');
 const vehicleDetails = require('../models/vehicleDetails');
 const userData = require('../models/userData');
 const transactionLogs = require('../models/transactionLogs');
+const IST_TIMEZONE_OFFSET = 5.5 * 60 * 60 * 1000;
 
 
 const router = express.Router();
@@ -163,7 +164,31 @@ router.post('/verify-otp', async (req, res) => {
 
 router.post('/getBalance', async (req, res) => {
     const { vehicleNumber, customerId, amount } = req.body;
+
+    const entryTime = new Date(Date.now() + IST_TIMEZONE_OFFSET);
     try {
+        // // Create transaction log document
+        // const transaction = new transactionLogs({
+        //     entry: {
+        //         location: {
+        //             type: 'Point',
+        //             coordinates: [0, 0]
+        //         },
+        //         time: entryTime
+        //     },
+        //     exit: {
+        //         location: {
+        //             type: 'Point',
+        //             coordinates: [0, 0]
+        //         },
+        //         time: entryTime,
+        //     },
+        //     'tollPaid': amount,
+        //     'vehicleNumber': vehicleNumber,
+        //     'customerId': customerId
+        // });
+        // await transaction.save();
+
         const updatedUser = await userData.findOneAndUpdate(
             { vehicleNumber },
             { customerId: customerId, $inc: { balance: amount }, verified: true },
@@ -191,6 +216,18 @@ router.post('/getTransactionLogs', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+router.post('/getWallet', async (req, res) => {
+    const { vehicleNumber } = req.body;
+    try {
+        const user = await userData.findOne({ vehicleNumber: vehicleNumber });
+        const balance = user.balance;
+        res.status(200).json({ balance: balance });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+})
 
 router.use('/payment', paymentRoutes);
 

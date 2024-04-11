@@ -163,7 +163,7 @@ router.post('/verify-otp', async (req, res) => {
 });
 
 router.post('/getBalance', async (req, res) => {
-    const { vehicleNumber, customerId, amount } = req.body;
+    const { vehicleNumber, amount } = req.body;
 
     const entryTime = new Date(Date.now() + IST_TIMEZONE_OFFSET);
     try {
@@ -191,7 +191,7 @@ router.post('/getBalance', async (req, res) => {
 
         const updatedUser = await userData.findOneAndUpdate(
             { vehicleNumber },
-            { customerId: customerId, $inc: { balance: amount }, verified: true },
+            { customerId: "cust_123bfsdfjsbdf", $inc: { balance: amount }, verified: true },
             { new: true }
         );
 

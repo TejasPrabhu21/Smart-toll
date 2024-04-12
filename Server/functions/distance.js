@@ -10,7 +10,7 @@ async function calculateDistance(coordinates){
         const distanceResponse = await axios.get(`https://router.project-osrm.org/route/v1/driving/${origin};${destination}?overview=false`);
         const distance = distanceResponse.data.routes[0].distance; // Distance is in meters
         // console.log("Distance:", distance / 1000, "km"); // Convert distance to kilometers
-        return (distance / 1000).toPrecision(4);
+        return (distance / 1000).toPrecision(3);
     } catch(error){
         console.log(error);
     }

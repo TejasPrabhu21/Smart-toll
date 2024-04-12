@@ -24,7 +24,7 @@ async function calculateTollTax(vehicleType, distance) {
         const tollTax = (distance) * tollTaxRates[vehicleType];
         // console.log(distance);
         // console.log(tollTax);
-        return tollTax.toPrecision(2);
+        return tollTax.toPrecision(2) * 100;
     } catch (error) {
         console.error('Error occurred while calculating toll tax:', error);
         throw new Error('Failed to calculate toll tax');

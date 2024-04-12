@@ -39,6 +39,8 @@ vehicleRouter.post('/entry', async (req, res) => {
         // Generate JWT token with entryCoordinates
         const token = jwt.sign({ coordinates, transactionId: transaction._id, userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
+        console.log(`Vehicle ${vehicleNumber} entered. Coordinates: ${coordinates}\n`);
+
         res.status(200).json({ token, transaction });
     } catch (error) {
         console.error('Error:', error);
@@ -62,8 +64,7 @@ vehicleRouter.post('/exit', async (req, res) => {
         const distance = await calculateDistance(entryExitCoords);
         const tollAmount = await calculateTollTax('car', distance);
         const exitTime = new Date(Date.now() + IST_TIMEZONE_OFFSET);
-        const custId = user.customerId;
-        console.log(custId);
+
         // Update the transaction log document with exit details
         const updatedTransaction = await transactionLogs.findByIdAndUpdate(
             transactionId,
@@ -75,7 +76,7 @@ vehicleRouter.post('/exit', async (req, res) => {
                     },
                     'exit.time': exitTime,
                     'tollPaid': tollAmount,
-                    'customerId': custId
+                    'customerId': "cus_id_42j3b4k2b3342b3"
                 }
             },
             { new: true } // Return the updated document
@@ -93,6 +94,9 @@ vehicleRouter.post('/exit', async (req, res) => {
             }, // Push transaction log ID to the array and deduct toll amount
             { new: true } // Return updated document
         );
+
+        console.log(`Vehicle ${vehicleNumber} exited. Coordinates: ${coordinates} \n Distance travelled: ${distance} km \n Toll Amount: ₹ ${tollAmount} \n\n`);
+
         res.status(200).json({ updatedTransaction, 'distance': distance, 'tollAmount': tollAmount, message: 'Exit recorded successfully' });
     } catch (error) {
         console.error('Error:', error);

@@ -6,6 +6,8 @@ const calculateTollTax = require('../functions/amount.js');
 const TransactionLogs = require('../models/transactionLogs');
 const userData = require('../models/userData');
 const transactionLogs = require('../models/transactionLogs');
+const axios = require('axios');
+const vehicleDetails = require('../models/vehicleDetails.js');
 
 const IST_TIMEZONE_OFFSET = 5.5 * 60 * 60 * 1000;
 
@@ -15,8 +17,17 @@ vehicleRouter.post('/entry', async (req, res) => {
     try {
         const { vehicleNumber, coordinates } = req.body;
         const entryTime = new Date(Date.now() + IST_TIMEZONE_OFFSET);
+        let userId;
+        let user = await userData.findOne({ vehicleNumber });
 
-        const user = await userData.findOne({ vehicleNumber });
+        if (!user) {
+            const { RegistrationNumber, OwnerName, PhoneNumber } = await vehicleDetails.findOne({ RegistrationNumber: vehicleNumber });
+
+            user = new userData({ vehicleNumber: RegistrationNumber, username: OwnerName, phoneNumber: PhoneNumber });
+            await user.save();
+        }
+        userId = user._id;
+
         // Create transaction log document
         const transaction = new transactionLogs({
             entry: {
@@ -37,7 +48,7 @@ vehicleRouter.post('/entry', async (req, res) => {
         await transaction.save();
 
         // Generate JWT token with entryCoordinates
-        const token = jwt.sign({ coordinates, transactionId: transaction._id, userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ coordinates, transactionId: transaction._id, userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         console.log(`Vehicle ${vehicleNumber} entered. Coordinates: ${coordinates}\n`);
 
@@ -94,6 +105,10 @@ vehicleRouter.post('/exit', async (req, res) => {
             }, // Push transaction log ID to the array and deduct toll amount
             { new: true } // Return updated document
         );
+
+        if (!updatedUserData) {
+            return res.status(404).json({ message: 'User data not found' });
+        }
 
         console.log(`Vehicle ${vehicleNumber} exited. Coordinates: ${coordinates} \n Distance travelled: ${distance} km \n Toll Amount: ₹ ${tollAmount} \n\n`);
 

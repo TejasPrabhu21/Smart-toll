@@ -138,22 +138,20 @@ router.post('/verify-otp', async (req, res) => {
         await OTP.deleteOne({ _id: otpEntry._id });
 
         // // Format phone number properly
-        // const formattedPhoneNumber = "+91" + phoneNumber;
+        const formattedPhoneNumber = "+91 " + phoneNumber;
 
-        // // Call external service to fetch vehicle registration details
-        // const vehicleData = { "PhoneNumber": formattedPhoneNumber };
-        // const { data } = await axios.post('https://smart-toll.onrender.com/user/vehicle', vehicleData);
+        // Call external service to fetch vehicle registration details
+        const vehicleData = { "PhoneNumber": formattedPhoneNumber };
+        const { RegistrationNumber, OwnerName, PhoneNumber } = await vehicleDetails.findOne(vehicleData);
 
-        // const { RegistrationNumber, OwnerName, PhoneNumber } = data;
+        // Check if user data already exists
+        let existingUser = await userData.findOne({ vehicleNumber: RegistrationNumber });
 
-        // // Check if user data already exists
-        // let existingUser = await userData.findOne({ vehicleNumber: RegistrationNumber });
-
-        // if (!existingUser) {
-        //     // If user data doesn't exist, create a new entry
-        //     const newUser = new userData({ username: OwnerName, vehicleNumber: RegistrationNumber, phoneNumber: PhoneNumber });
-        //     await newUser.save();
-        // }
+        if (!existingUser) {
+            // If user data doesn't exist, create a new entry
+            const newUser = new userData({ username: OwnerName, vehicleNumber: RegistrationNumber, phoneNumber: PhoneNumber });
+            await newUser.save();
+        }
 
         res.status(201).json({ success: true });
     } catch (error) {

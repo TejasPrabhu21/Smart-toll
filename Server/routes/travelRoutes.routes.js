@@ -19,7 +19,7 @@ vehicleRouter.get('/nearestTollGate', async (req, res) => {
         // const { signal, tollGate } = await checkTollGate([latitude, longitude]);
         // res.send({ signal, tollGate });
 
-        res.send({
+        res.status(201).json({
             checkPoints: [
                 [12.8949606, 74.8454148],
                 [12.894651777327926, 74.84534188136371],

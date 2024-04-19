@@ -8,9 +8,29 @@ const userData = require('../models/userData');
 const transactionLogs = require('../models/transactionLogs');
 const axios = require('axios');
 const vehicleDetails = require('../models/vehicleDetails.js');
+const checkTollGate = require('../functions/nearestTollGate.js');
 
 const IST_TIMEZONE_OFFSET = 5.5 * 60 * 60 * 1000;
 
+//to get the nearest toll gate to current location
+vehicleRouter.get('/nearestTollGate', async (req, res) => {
+    try {
+        const { latitude, longitude } = req.query;
+        // const { signal, tollGate } = await checkTollGate([latitude, longitude]);
+        // res.send({ signal, tollGate });
+
+        res.send({
+            checkPoints: [
+                [12.8949606, 74.8454148],
+                [12.894651777327926, 74.84534188136371],
+                [12.894394304346331, 74.8451676958684]
+            ]
+        });
+    } catch (error) {
+        console.error('Error occurred:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 // Route for handling entry events from the OBU
 vehicleRouter.post('/entry', async (req, res) => {

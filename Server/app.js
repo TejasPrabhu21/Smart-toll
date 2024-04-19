@@ -125,17 +125,17 @@ app.post('/addTollGateData', async (req, res) => {
 });
 
 
-//to get the nearest toll gate to current location
-app.get('/nearestTollGate', async (req, res) => {
-    try {
-        const { latitude, longitude } = req.query;
-        const { signal, tollGate } = await checkTollGate([latitude, longitude]);
-        res.send({ signal, tollGate });
-    } catch (error) {
-        console.error('Error occurred:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+// //to get the nearest toll gate to current location
+// app.get('/nearestTollGate', async (req, res) => {
+//     try {
+//         const { latitude, longitude } = req.query;
+//         const { signal, tollGate } = await checkTollGate([latitude, longitude]);
+//         res.send({ signal, tollGate });
+//     } catch (error) {
+//         console.error('Error occurred:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
 
 //get distance between two points
 app.get('/distance', async (req, res) => {

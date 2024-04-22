@@ -142,7 +142,10 @@ router.post('/verify-otp', async (req, res) => {
 
         // Call external service to fetch vehicle registration details
         const vehicleData = { "PhoneNumber": formattedPhoneNumber };
-        const { RegistrationNumber, OwnerName, PhoneNumber } = await vehicleDetails.findOne(vehicleData);
+        // const { RegistrationNumber, OwnerName, PhoneNumber } = await vehicleDetails.findOne(vehicleData);
+        const vehicles = await vehicleDetails.findOne(vehicleData);
+        console.log(vehicles);
+        const { RegistrationNumber, OwnerName, PhoneNumber } = vehicles;
 
         // Check if user data already exists
         let existingUser = await userData.findOne({ vehicleNumber: RegistrationNumber });

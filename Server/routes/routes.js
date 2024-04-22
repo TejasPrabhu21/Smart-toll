@@ -116,6 +116,7 @@ router.post('/send-otp', async (req, res) => {
 // Route to handle OTP verification
 router.post('/verify-otp', async (req, res) => {
     const { phoneNumber, otp } = req.body;
+    console.log(phoneNumber, otp);
 
     if (!phoneNumber || !otp) {
         return res.status(400).json({ error: 'Phone number and OTP are required' });
@@ -138,13 +139,14 @@ router.post('/verify-otp', async (req, res) => {
         await OTP.deleteOne({ _id: otpEntry._id });
 
         // // Format phone number properly
-        const formattedPhoneNumber = "+91 " + phoneNumber;
+        const formattedPhoneNumber = phoneNumber;
 
         // Call external service to fetch vehicle registration details
         const vehicleData = { "PhoneNumber": formattedPhoneNumber };
         // const { RegistrationNumber, OwnerName, PhoneNumber } = await vehicleDetails.findOne(vehicleData);
         const vehicles = await vehicleDetails.findOne(vehicleData);
         console.log(vehicles);
+        console.log(vehicles.RegistrationNumber)
         const { RegistrationNumber, OwnerName, PhoneNumber } = vehicles;
 
         // Check if user data already exists

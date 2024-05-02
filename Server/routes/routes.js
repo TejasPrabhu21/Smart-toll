@@ -82,35 +82,36 @@ router.post('/send-otp', async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
     // Send OTP via fast-two-sms
-    try {
-        const fromattedPhone = phoneNumber.split(" ")[1];
-        const response = await axios.post(
-            process.env.FAST_TWO_SMS_URI,
-            {
-                route: 'q',
-                message: `Dear customer,\nthe one time password (OTP) is ${otp}. \nUse this code within the next 5 minutes to verify your account and start enjoying seamless toll services. `,
-                language: 'english',
-                flash: 0,
-                numbers: fromattedPhone,
-            },
-            {
-                headers: {
-                    "authorization": process.env.FAST_TWO_SMS_API_KEY,
-                    "Content-Type": "application/json",
-                    'Cache-Control': 'no-cache',
-                },
-            }
-        );
-        if (response.data.return === true) {
-            res.send('OTP sent successfully');
-        } else {
-            res.send('Failed to send OTP');
-        }
-    } catch (error) {
-        console.log(error);
-        res.send('Error sending OTP');
-    }
-    // res.send('OTP sent successfully');
+    // try {
+    //     const fromattedPhone = phoneNumber.split(" ")[1];
+    //     const response = await axios.post(
+    //         process.env.FAST_TWO_SMS_URI,
+    //         {
+    //             route: 'q',
+    //             message: `Dear customer,\nthe one time password (OTP) is ${otp}. \nUse this code within the next 5 minutes to verify your account and start enjoying seamless toll services. `,
+    //             language: 'english',
+    //             flash: 0,
+    //             numbers: fromattedPhone,
+    //         },
+    //         {
+    //             headers: {
+    //                 "authorization": process.env.FAST_TWO_SMS_API_KEY,
+    //                 "Content-Type": "application/json",
+    //                 'Cache-Control': 'no-cache',
+    //             },
+    //         }
+    //     );
+    //     if (response.data.return === true) {
+    //         res.send('OTP sent successfully');
+    //     } else {
+    //         res.send('Failed to send OTP');
+    //     }
+    // } catch (error) {
+    //     console.log(error);
+    //     res.send('Error sending OTP');
+    // }
+    console.log("OTP: ", otp);
+    res.send('OTP sent successfully');
 });
 
 // Route to handle OTP verification
